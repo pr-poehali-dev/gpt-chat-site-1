@@ -1,0 +1,47 @@
+{
+  "tests": [
+    {
+      "name": "Test OPTIONS request for CORS",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": "",
+      "bodyMatcher": "exact"
+    },
+    {
+      "name": "Test POST without messages",
+      "method": "POST", 
+      "path": "/",
+      "body": {
+        "model": "gpt-3.5-turbo",
+        "language": "ru"
+      },
+      "expectedStatus": 400,
+      "expectedBody": {
+        "error": "string"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Test POST with valid messages",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "messages": [
+          {
+            "role": "user", 
+            "content": "Привет!"
+          }
+        ],
+        "model": "gpt-3.5-turbo",
+        "language": "ru"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "message": "object",
+        "model": "string"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

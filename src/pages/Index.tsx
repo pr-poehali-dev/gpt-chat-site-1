@@ -26,7 +26,12 @@ interface ChatSession {
 function Index() {
   const [selectedModel, setSelectedModel] = useState('gpt-3.5-turbo');
   const [selectedLanguage, setSelectedLanguage] = useState('ru');
-  const [apiKey, setApiKey] = useState('');
+  const [apiKey, setApiKey] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('openai_api_key') || '';
+    }
+    return '';
+  });
   const [currentChat, setCurrentChat] = useState<ChatSession | null>(null);
   const [chatHistory, setChatHistory] = useState<ChatSession[]>([]);
   const [inputMessage, setInputMessage] = useState('');
@@ -106,16 +111,39 @@ function Index() {
     setInputMessage('');
     setIsLoading(true);
     
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      // Call OpenAI API through our backend
+      const response = await fetch('https://functions.poehali.dev/a0a7aa8c-f5ff-4011-bebb-702dedb0429b', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: updatedChat.messages.map(msg => ({
+            role: msg.role,
+            content: msg.content
+          })),
+          model: selectedModel,
+          language: selectedLanguage,
+          apiKey: apiKey
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Network error' }));
+        throw new Error(errorData.error || `HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      
       const aiResponse: Message = {
         role: 'assistant',
-        content: `Отвечаю с помощью модели ${getCurrentModelName()}. ${apiKey ? 'Используется ваш API ключ.' : 'Демо-режим.'} Ваш запрос обработан на языке ${languages.find(l => l.id === selectedLanguage)?.name}!`,
+        content: data.message.content,
         timestamp: new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
       };
-      updatedChat!.messages.push(aiResponse);
-      setCurrentChat({ ...updatedChat! });
-      setIsLoading(false);
+
+      updatedChat.messages.push(aiResponse);
+      setCurrentChat({ ...updatedChat });
       
       // Update chat history
       setChatHistory(prev => {
@@ -125,7 +153,19 @@ function Index() {
         }
         return [...prev, updatedChat!];
       });
-    }, 1500);
+
+    } catch (error: any) {
+      const errorMessage: Message = {
+        role: 'assistant',
+        content: `Ошибка: ${error.message}. ${!apiKey ? 'Добавьте API ключ OpenAI в настройки для работы с реальными моделями.' : 'Проверьте правильность API ключа.'}`,
+        timestamp: new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
+      };
+
+      updatedChat.messages.push(errorMessage);
+      setCurrentChat({ ...updatedChat });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const clearChat = () => {
@@ -290,7 +330,10 @@ function Index() {
               placeholder="Введите ваш OpenAI API ключ"
             />
             <Button 
-              onClick={() => alert('API ключ сохранен!')}
+              onClick={() => {
+                localStorage.setItem('openai_api_key', apiKey);
+                alert('API ключ сохранен!');
+              }}
               size="sm"
               className="w-full"
             >
