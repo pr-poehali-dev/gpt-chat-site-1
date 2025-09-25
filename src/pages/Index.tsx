@@ -89,14 +89,7 @@ function Index() {
                 <Icon name="MessageSquare" size={16} className="mr-2" />
                 Чат
               </Button>
-              <Button 
-                variant={activeTab === 'pricing' ? 'default' : 'ghost'}
-                onClick={() => setActiveTab('pricing')}
-                className="hover-scale"
-              >
-                <Icon name="CreditCard" size={16} className="mr-2" />
-                Тарифы
-              </Button>
+
               <Button 
                 variant={activeTab === 'analytics' ? 'default' : 'ghost'}
                 onClick={() => setActiveTab('analytics')}
@@ -269,101 +262,7 @@ function Index() {
             </div>
           </TabsContent>
 
-          {/* Pricing Tab */}
-          <TabsContent value="pricing" className="space-y-6 animate-fade-in">
-            <div className="text-center space-y-4 py-8">
-              <h2 className="text-3xl font-bold">Выберите тариф</h2>
-              <p className="text-muted-foreground">Прозрачное ценообразование без скрытых платежей</p>
-            </div>
-            
-            <div className="grid md:grid-cols-3 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Базовый</CardTitle>
-                  <CardDescription>Для начинающих пользователей</CardDescription>
-                  <div className="text-3xl font-bold">₽490 <span className="text-sm font-normal">/мес</span></div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-center">
-                      <Icon name="Check" size={14} className="mr-2 text-accent" />
-                      1000 запросов в месяц
-                    </li>
-                    <li className="flex items-center">
-                      <Icon name="Check" size={14} className="mr-2 text-accent" />
-                      GPT-3.5 + Claude-3
-                    </li>
-                    <li className="flex items-center">
-                      <Icon name="Check" size={14} className="mr-2 text-accent" />
-                      Базовая аналитика
-                    </li>
-                  </ul>
-                  <Button className="w-full">Выбрать</Button>
-                </CardContent>
-              </Card>
 
-              <Card className="border-primary relative">
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <Badge className="gradient-purple">Популярный</Badge>
-                </div>
-                <CardHeader>
-                  <CardTitle>Профессиональный</CardTitle>
-                  <CardDescription>Для активных пользователей</CardDescription>
-                  <div className="text-3xl font-bold">₽990 <span className="text-sm font-normal">/мес</span></div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-center">
-                      <Icon name="Check" size={14} className="mr-2 text-accent" />
-                      5000 запросов в месяц
-                    </li>
-                    <li className="flex items-center">
-                      <Icon name="Check" size={14} className="mr-2 text-accent" />
-                      Все модели ИИ
-                    </li>
-                    <li className="flex items-center">
-                      <Icon name="Check" size={14} className="mr-2 text-accent" />
-                      Расширенная аналитика
-                    </li>
-                    <li className="flex items-center">
-                      <Icon name="Check" size={14} className="mr-2 text-accent" />
-                      Приоритетная поддержка
-                    </li>
-                  </ul>
-                  <Button className="w-full gradient-purple">Выбрать</Button>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Корпоративный</CardTitle>
-                  <CardDescription>Для команд и бизнеса</CardDescription>
-                  <div className="text-3xl font-bold">₽2490 <span className="text-sm font-normal">/мес</span></div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-center">
-                      <Icon name="Check" size={14} className="mr-2 text-accent" />
-                      Безлимитные запросы
-                    </li>
-                    <li className="flex items-center">
-                      <Icon name="Check" size={14} className="mr-2 text-accent" />
-                      Все модели + API
-                    </li>
-                    <li className="flex items-center">
-                      <Icon name="Check" size={14} className="mr-2 text-accent" />
-                      Полная аналитика
-                    </li>
-                    <li className="flex items-center">
-                      <Icon name="Check" size={14} className="mr-2 text-accent" />
-                      Персональный менеджер
-                    </li>
-                  </ul>
-                  <Button className="w-full" variant="outline">Связаться</Button>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
 
           {/* Analytics Tab */}
           <TabsContent value="analytics" className="space-y-6 animate-fade-in">
@@ -456,11 +355,11 @@ function Index() {
 
       {/* Mobile Navigation */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t">
-        <div className="grid grid-cols-4 gap-1 p-2">
+        <div className="grid grid-cols-3 gap-1 p-2">
           {[
             { id: 'models', icon: 'Brain', label: 'Модели' },
             { id: 'chat', icon: 'MessageSquare', label: 'Чат' },
-            { id: 'pricing', icon: 'CreditCard', label: 'Тарифы' },
+
             { id: 'analytics', icon: 'BarChart3', label: 'Статистика' },
           ].map((tab) => (
             <Button
